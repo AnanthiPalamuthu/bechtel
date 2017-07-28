@@ -1,0 +1,199 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>com.hashmap.tempus</groupId>
+		<artifactId>processing-plane</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.hashmap.ts</groupId>
+	<artifactId>hashmap-utils</artifactId>
+	<version>1.0.0</version>
+
+	<dependencies>
+		<dependency>
+			<artifactId>spark-core_${hdp.scala.version}</artifactId>
+			<groupId>org.apache.spark</groupId>
+			<version>${spark.hortonworks.version}</version>
+		</dependency>
+
+	<dependency>
+	  <groupId>org.apache.spark</groupId>
+	  <artifactId>spark-hive_${hdp.scala.version}</artifactId>
+	  <version>${spark.hortonworks.version}</version>
+	</dependency>
+
+ 	<dependency>
+      <artifactId>spark-streaming_${hdp.scala.version}</artifactId>
+      <groupId>org.apache.spark</groupId>
+	  <version>${spark.hortonworks.version}</version>
+	</dependency>
+	
+   <dependency>
+	  <groupId>org.apache.spark</groupId>
+	  <artifactId>spark-streaming-kafka_${hdp.scala.version}</artifactId>
+	  <version>${spark.hortonworks.version}</version>
+	  <exclusions>
+		<exclusion>
+		  <groupId>org.apache.kafka</groupId>
+		  <artifactId>kafka_${hdp.scala.version}</artifactId>
+		</exclusion>
+		</exclusions>
+    </dependency> 
+    <dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-sql_${hdp.scala.version}</artifactId>
+    	<version>${spark.hortonworks.version}</version>
+    </dependency>
+ 
+   <dependency>
+    	<groupId>org.apache.phoenix</groupId>
+    	<artifactId>phoenix-core</artifactId>
+	<version>${phoenix.hortonworks.version}</version>
+    </dependency>
+
+    <dependency>
+    	<groupId>org.apache.phoenix</groupId>
+    	<artifactId>phoenix-spark</artifactId>
+		<version>${phoenix.hortonworks.version}</version>
+    </dependency>
+	<dependency>
+		<groupId>org.apache.curator</groupId>
+		<artifactId>curator-client</artifactId>
+		<version>2.6.0</version>
+	</dependency>
+	<dependency>
+	    <groupId>javax.mail</groupId>
+	    <artifactId>mail</artifactId>
+	    <version>1.4</version>
+	</dependency>
+	<dependency>
+	    <groupId>javax.activation</groupId>
+	    <artifactId>activation</artifactId>
+	    <version>1.1.1</version>
+	</dependency>
+   
+
+	
+		<dependency>
+			<artifactId>kafka-clients</artifactId>
+			<groupId>org.apache.kafka</groupId>
+			<version>${kafka.hortonworks.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>kafka_2.10</artifactId>
+			<groupId>org.apache.kafka</groupId>
+			<version>${kafka.hortonworks.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>gson</artifactId>
+			<groupId>com.google.code.gson</groupId>
+			<version>2.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-actor_2.10</artifactId>
+			<version>2.3.9</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jsuereth</groupId>
+			<artifactId>scala-arm_2.10</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hbase</groupId>
+			<artifactId>hbase-client</artifactId>
+			<version>${hbase.hortonworks.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-common</artifactId>
+			<version>${hadoop.hortonworks.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-hdfs</artifactId>
+			<version>${hadoop.hortonworks.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>javax.activation</groupId>
+		    <artifactId>activation</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
+    <dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-sql_${hdp.scala.version}</artifactId>
+    	<version>${spark.hortonworks.version}</version>
+    </dependency>
+	</dependencies>
+	<build>
+<!--
+		<sourceDirectory>src/main/scala</sourceDirectory>
+		<testSourceDirectory>src/test/scala</testSourceDirectory>
+-->
+		<plugins>
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>scala-maven-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>testCompile</goal>
+						</goals>
+						<configuration>
+							<args>
+								<arg>-make:transitive</arg>
+								<arg>-dependencyfile</arg>
+								<arg>${project.build.directory}/.scala_dependencies</arg>
+							</args>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>${maven-shade-plugin.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<filters>
+						<filter>
+							<artifact>*:*</artifact>
+							<excludes>
+								<exclude>META-INF/*.SF</exclude>
+								<exclude>META-INF/*.DSA</exclude>
+								<exclude>META-INF/*.RSA</exclude>
+							</excludes>
+						</filter>
+					</filters>
+					<finalName>uber-tempus-utils-1.0.0</finalName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- <build> <sourceDirectory>src/main/scala</sourceDirectory> <testSourceDirectory>src/test/scala</testSourceDirectory> 
+		<resources> <resource> <directory>src/main/scala</directory> <excludes> <exclude>**/*.java</exclude> 
+		</excludes> </resource> <resource> <directory>src/main/resources</directory> 
+		<excludes> <exclude>**/*.java</exclude> </excludes> </resource> </resources> 
+		<testResources> <testResource> <directory>src/test/scala</directory> <excludes> 
+		<exclude>**/*.java</exclude> </excludes> </testResource> </testResources> 
+		<plugins> <plugin> <artifactId>maven-compiler-plugin</artifactId> <version>3.5.1</version> 
+		<configuration> <source/> <target/> </configuration> </plugin> </plugins> 
+		</build> -->
+</project>
