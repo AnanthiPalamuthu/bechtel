@@ -1,0 +1,17 @@
+server installed : 10.232.230.188
+
+user profile : ssiva
+
+
+To start superset instance
+--------------------------
+
+superset runserver
+
+
+To stop Superset instance
+-------------------------
+
+ps -ef|grep superset
+
+kill -9 <all process listing>

@@ -1,0 +1,55 @@
+To install python 3.4
+------------------------
+http://stackoverflow.com/questions/8087184/problems-installing-python3-on-rhel
+
+./configure --enable-loadable-sqlite-extensions && make && sudo make install (To enable sql lite library in Python)
+
+alias python=/home/IAMERS/ssiva/superset/setup-files/Python-3.4.3/python
+
+
+To install Python dependencies:-
+--------------------------------
+--> this will give the pip3, then using this pip3, use below to install the latest pip
+
+sudo pip3 install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 --upgrade pip
+
+sudo yum upgrade python-setuptools
+
+sudo yum install gcc libffi-devel python-devel python-pip python-wheel openssl-devel libsasl2-devel openldap-devel
+
+sudo pip3 install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 --upgrade setuptools
+sudo pip3 install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 --upgrade setuptools pip3
+sudo pip3 install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 superset
+sudo pip3 install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 pandas
+sudo -H pip3 install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 pandas
+pip install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 --upgrade pip
+
+sudo pip3 install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 pip
+sudo pip3 install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 --upgrade pip
+
+sudo -H pip install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 pandas
+sudo pip install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 superset
+
+To initialize SuperSet
+-----------------------
+fabmanager create-admin --app superset
+superset db upgrade
+sudo superset db upgrade
+superset load_examples
+superset init
+superset runserver
+
+to manually install superset setup-files/Python-3
+-----------------------------------------------
+pip3 install  --no-index --find-links=file:///home/IAMERS/ssiva/superset/setup-files/superset-0.16.1 superset
+
+to install superset with pip
+----------------------------
+sudo pip install --proxy=http://<user>:<password>@ashsproxy.amers.ibechtel.com:8080 superset
+
+to fix the ImportError: No module named '_sqlite3' error
+--------------------------------------------------------
+-->from the Python setup folder
+
+./configure --enable-loadable-sqlite-extensions && make && sudo make install
+
