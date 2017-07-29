@@ -1,0 +1,4 @@
+druid.datasource.name=datasource_gl_balances_3yr_flat
+druid.ingestion.startmonth=TBD_START_MONTH
+druid.ingestion.endmonth=TBD_END_MONTH
+druid.ingestion.hdfspath=TBD_SRC_PATH

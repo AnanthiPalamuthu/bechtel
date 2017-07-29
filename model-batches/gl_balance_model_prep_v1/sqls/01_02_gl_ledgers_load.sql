@@ -1,0 +1,28 @@
+select
+    gll.ledger_id dim_ledger_id,
+    gll.name  ledger_name,
+    gll.short_name  ledger_short_name,
+    gll.description  ledger_description,
+    gll.ledger_category_code  ,
+    gll.alc_ledger_type_code  ,
+    gll.object_type_code  ,
+    gll.le_ledger_type_code  ,
+    gll.completion_status_code  ,
+    gll.configuration_id  ,
+    gll.chart_of_accounts_id  ,
+    gll.currency_code  currency_code_ledger,
+    gll.period_set_name  ,
+    gll.accounted_period_type  ,
+    gll.first_ledger_period_name  ,
+    gll.transaction_calendar_id  ,
+    gll.daily_translation_rate_type  ,
+    gll.ledger_attributes  ,
+    gll.implicit_ledger_set_id  ,
+    gll.latest_opened_period_name  ,
+    gll.latest_encumbrance_year  ,
+    gll.period_average_rate_type  ,
+    gll.period_end_rate_type  ,
+    gll.budget_period_avg_rate_type  ,
+    gll.budget_period_end_rate_type
+from
+     ${source_hive_schema_name}.gl_ledgers gll

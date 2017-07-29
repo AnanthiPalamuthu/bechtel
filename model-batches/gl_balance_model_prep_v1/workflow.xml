@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sparksql-application name="spark_gl_balance_report_model_prep">
+
+  <start to="01_source_tables_load_fork"/>
+
+        <context init-file="/home/IAMERS/s-bbs-bdac/files/model_pd_work/work/gl_balance_model_prep/init-context.properties"/>
+
+        <global>
+		<param name="source_hive_schema_name" value="bbs_ebsp"/>
+                <param name="model_hive_schema_name"  value="bbs_ebsp_model_space"/> 
+		<param name="fnd_id_flex_code" value="GL#"/>
+		<param name="segment_attr_type" value="GL_ACCOUNT"/>
+        </global>
+
+	<fork name="01_source_tables_load_fork">
+		<path start="01_01_gl_balances_load"/>
+		<path start="01_02_gl_ledgers_load"/>
+		<path start="01_03_gl_code_combinations_load"/>
+		<path start="01_04_segment_attr_values_load"/>	
+		<path start="01_05_fnd_flex_segments_load"/>	
+		<path start="01_06_fnd_flex_values_load"/>
+	</fork>
+
+
+        <step name="01_01_gl_balances_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_01_gl_balances_load.sql" tmp-table="01_01_gl_balances_cache" storage="memory" repartition="800"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+
+
+        <step name="01_02_gl_ledgers_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_02_gl_ledgers_load.sql" tmp-table="01_02_gl_ledgers_cache" storage="memory" repartition="400"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+
+
+	<step name="01_03_gl_code_combinations_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_03_gl_code_combinations_load.sql" tmp-table="01_03_gl_code_combinations_cache" storage="memory" repartition="400"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+
+
+        <step name="01_04_segment_attr_values_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_04_segment_attr_values_load.sql" tmp-table="01_04_segment_attr_values_cache" storage="memory"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+		
+
+        <step name="01_05_fnd_flex_segments_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_05_fnd_flex_segments_load.sql" tmp-table="01_05_fnd_flex_segments_cache" storage="memory"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+		
+
+        <step name="01_06_fnd_flex_values_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_06_fnd_flex_values_load.sql" tmp-table="01_06_fnd_flex_values_cache" storage="memory" repartition="200"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>		
+		
+
+	<join name="01_source_tables_load_join" to="02_ledger_balances_prep"/>
+		
+
+<!--hive-table="bbs_ebsa_model_space.v8_01_ledger_balances"-->
+
+        <step name="02_ledger_balances_prep" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/02_ledger_balances_prep.sql" tmp-table="02_ledger_balances" storage="memory"  repartition="800"/>
+			<param name="gl_balance_cache" value="${01_01_gl_balances_load.tmp-table}"/>
+			<param name="gl_ledger_cache" value="${01_02_gl_ledgers_load.tmp-table}"/>
+                <next on-success="03_balances_ledger_segmentattr_prep" on-error="fail"/>
+        </step>
+
+
+<!--hive-table="bbs_ebsa_model_space.v8_02_balances_ledger_segmentattr"-->
+
+        <step name="03_balances_ledger_segmentattr_prep" desc="cache" unpersist="01_01_gl_balances_load">
+                <sql  path="${gl.flatmodel.sqls.path}/03_balances_ledger_segmentattr_prep.sql" tmp-table="03_balances_ledger_segmentattr_cache" storage="memory"  repartition="800"/>
+			<param name="gl_balance_interim_cache" value="${02_ledger_balances_prep.tmp-table}"/>
+			<param name="gl_segment_attr_cache" value="${01_04_segment_attr_values_load.tmp-table}"/>
+                <next on-success="04_balances_ledger_segments_prep" on-error="fail"/>
+        </step>
+
+
+<!--hive-table="bbs_ebsa_model_space.v8_03_balances_ledger_segments"-->
+
+        <step name="04_balances_ledger_segments_prep" desc="cache" unpersist="02_ledger_balances_prep">
+                <sql  path="${gl.flatmodel.sqls.path}/04_balances_ledger_segments_prep.sql" tmp-table="04_balances_ledger_segments_cache" storage="memory"  repartition="800"/>
+			<param name="gl_balance_interim_cache" value="${03_balances_ledger_segmentattr_prep.tmp-table}"/>
+			<param name="fnd_segment_cache" value="${01_05_fnd_flex_segments_load.tmp-table}"/>
+                <next on-success="05_balances_ledger_codes_prep" on-error="fail"/>
+        </step>
+
+
+<!--hive-table="bbs_ebsa_model_space.v8_04_balances_ledger_codes"-->		
+
+        <step name="05_balances_ledger_codes_prep" desc="cache" unpersist="03_balances_ledger_segmentattr_prep,04_balances_ledger_segments_prep">
+                <sql  path="${gl.flatmodel.sqls.path}/05_balances_ledger_codes_prep.sql" tmp-table="05_balances_ledger_codes_cache" storage="memory"  repartition="800"/>
+			<param name="gl_balance_interim_cache" value="${04_balances_ledger_segments_prep.tmp-table}"/>
+			<param name="code_combinations_cache" value="${01_03_gl_code_combinations_load.tmp-table}"/>
+                <next on-success="06_balances_ledger_flex_values_prep" on-error="fail"/>
+        </step>
+
+
+<!--hive-table="bbs_ebsa_model_space.v8_05_balances_ledger_flex_values"-->
+
+        <step name="06_balances_ledger_flex_values_prep" desc="cache" unpersist="05_balances_ledger_codes_prep,01_03_gl_code_combinations_load,01_02_gl_ledgers_load">
+                <sql  path="${gl.flatmodel.sqls.path}/06_balances_ledger_flex_values_prep.sql" tmp-table="06_balances_ledger_flex_values_cache" storage="memory"  repartition="800"/>
+			<param name="gl_balance_interim_cache" value="${05_balances_ledger_codes_prep.tmp-table}"/>
+			<param name="fnd_flex_values_cache" value="${01_06_fnd_flex_values_load.tmp-table}"/>
+                <next on-success="07_store_recent_period_value" on-error="fail"/>
+        </step>		
+
+		
+        <step name="07_store_recent_period_value" desc="cache" hdfs-path-sync="/user/s-bbs-bdac/tmp/gl_balances_job">
+                <sql  path="${gl.flatmodel.sqls.path}/07_store_recent_period_value.sql" tmp-table="07_store_recent_period_value_cache" storage="memory"/>
+                        <param name="gl_balance_interim_cache" value="${06_balances_ledger_flex_values_prep.tmp-table}"/>
+                <next on-success="08_apply_recent_period_values" on-error="fail"/>
+        </step>
+	
+
+        <step name="08_apply_recent_period_values" desc="cache" unpersist="05_balances_ledger_codes_prep">
+                <shell script-path="/home/IAMERS/s-bbs-bdac/files/model_pd_work/work/gl_balance_model_prep/sqls/08_apply_recent_period_values.sh"/>
+                <param name="period_lastvalue_hdfspath" value="/user/s-bbs-bdac/tmp/gl_balances_job"/>
+                <param name="flatmodel_files_path" value="/home/IAMERS/s-bbs-bdac/files/model_pd_work/work/gl_balance_model_prep/"/>
+                <param name="flatmodel_result_hdfspath" value="/apps/hive/warehouse/bbs_ebsp_model_space.db/gl_balance_flat_table_report_tmp"/>
+                <next on-success="09_prepare_gl_balance_flat_table" on-error="fail"/>
+        </step>
+
+
+        <step name="09_prepare_gl_balance_flat_table" desc="cache" >
+                <sql  path="${gl.flatmodel.sqls.path}/09_prepare_gl_balance_flat_table.sql" tmp-table="09_prepare_gl_balance_flat_table_cache" storage="memory"/>
+                        <param name="gl_balance_interim_cache" value="${06_balances_ledger_flex_values_prep.tmp-table}"/>
+                        <param name="flat_table_name" value="gl_balance_flat_table_report_tmp"/>
+                <next on-success="finish" on-error="fail"/>
+        </step>
+
+        <finish-step name="finish"/>
+        <fail-step name="fail"/>
+
+</sparksql-application>
