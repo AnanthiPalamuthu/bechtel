@@ -1,0 +1,106 @@
+select
+    jlfs.line_je_header_id,
+    jlfs.line_je_line_num,
+    jlfs.line_ledger_id,
+    jlfs.line_code_combination_id,
+    jlfs.period_name,
+    jlfs.line_effective_date,
+    jlfs.line_status,
+    jlfs.line_creation_date,
+    coalesce(jlfs.line_entered_dr,0) entered_dr,
+    coalesce(jlfs.line_entered_cr,0) entered_cr,
+    coalesce(jlfs.line_accounted_dr,0) accounted_dr,
+    coalesce(jlfs.line_accounted_cr,0) accounted_cr,
+    jlfs.line_description,
+    jlfs.line_reference_1,
+    jlfs.line_reference_2,
+    jlfs.line_reference_3,
+    jlfs.line_reference_4,
+    jlfs.line_reference_5,
+    jlfs.line_attribute1,
+    jlfs.line_attribute2,
+    jlfs.line_attribute3,
+    jlfs.line_attribute4,
+    jlfs.line_attribute5,
+    jlfs.line_attribute6,
+    jlfs.line_attribute7,
+    jlfs.line_attribute8,
+    jlfs.line_attribute9,
+    jlfs.line_attribute10,
+    jlfs.line_invoice_date,
+    jlfs.line_gl_sl_link_id,
+    jlfs.line_gl_sl_link_table,
+    jlfs.code_code_combination_id,
+    jlfs.code_chart_of_accounts_id,
+    jlfs.code_account_type,
+    jlfs.code_segment1,
+    jlfs.code_segment2,
+    jlfs.code_segment3,
+    jlfs.code_segment4,
+    jlfs.code_segment5,
+    jlfs.code_segment6,
+    jlfs.code_segment7,
+    jlfs.code_segment8,
+    jlfs.code_segment9,
+    jlfs.code_segment10,
+    jlfs.code_description,
+    jlfs.code_start_date_active,
+    jlfs.code_end_date_active,
+    jlfs.code_ledger_segment,
+    jlfs.code_ledger_type_code,
+    jlfs.code_alternate_code_combination_id,
+    jlfs.flex_application_id,
+    jlfs.flex_id_flex_code,
+    jlfs.flex_id_flex_name,
+    jlfs.flex_table_application_id,
+    jlfs.flex_application_table_name,
+    jlfs.flex_allow_id_valuesets,
+    jlfs.flex_unique_id_column_name,
+    jlfs.flex_description,
+    jlfs.flex_application_table_type,
+    jlfs.flex_structure_id_flex_num,
+    jlfs.flex_structure_language,
+    jlfs.flex_structure_id_flex_structure_name,
+    jlfs.flex_structure_description,
+    jlfs.segattr_application_column_name,
+    jlfs.attribute_value,
+    jlfs.segment_attribute_type,
+    jlfs.seg_application_id,
+    jlfs.seg_id_flex_code,
+    jlfs.seg_id_flex_num,
+    jlfs.seg_application_column_name,
+    jlfs.segment_name,
+    jlfs.segment_num,
+    jlfs.flex_value_set_id,
+    jlfs.default_type,
+    jlfs.default_value,
+   ffvv.flex_value_id,
+   ffvv.flex_value,
+   ffvv.compiled_value_attributes,
+   substr(compiled_value_attributes,3,1) ledger_type_char,
+   (case substr(compiled_value_attributes,3,1)
+          when 'A' then 'Asset'
+          when 'L' then 'Liability'
+          when 'E' then 'Expense'
+          when 'R' then 'Revenue'
+          when 'O' then 'Stockholders Equity'
+          else compiled_value_attributes end)  ledger_type,
+   ffvv.value_category,
+   ffvv.start_date_active,
+   ffvv.end_date_active,
+   ffvv.hierarchy_level,
+   ffvv.flex_value_meaning,
+   ffvv.description flex_value_description
+from
+   ${gl_line_interim_cache} jlfs,
+   ${flex_values_cache} ffvv
+where
+    jlfs.flex_value_set_id = ffvv.flex_value_set_id
+    and ffvv.flex_value = (case when(jlfs.seg_application_column_name='SEGMENT1') then jlfs.code_segment1
+                               when(jlfs.seg_application_column_name='SEGMENT2') then jlfs.code_segment2
+                               when(jlfs.seg_application_column_name='SEGMENT3') then jlfs.code_segment3
+                               when(jlfs.seg_application_column_name='SEGMENT4') then jlfs.code_segment4
+                               when(jlfs.seg_application_column_name='SEGMENT5') then jlfs.code_segment5
+                               when(jlfs.seg_application_column_name='SEGMENT6') then jlfs.code_segment6
+                               else jlfs.code_segment2
+                          end)

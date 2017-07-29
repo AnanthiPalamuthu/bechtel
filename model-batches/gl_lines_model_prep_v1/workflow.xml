@@ -1,0 +1,210 @@
+<?nes_flex_segment_values_prepxml version="1.0" encoding="UTF-8"?>
+
+<sparksql-application name="spark_gl_lines_report_model_prep">
+
+  <start to="01_source_tables_load_fork"/>
+
+        <context init-file="/home/IAMERS/s-bbs-bdac/files/model_pd_work/work/gl_lines_model_prep/init-context.properties"/>
+
+        <global>
+		<param name="source_hive_schema_name" value="bbs_ebsp"/>
+                <param name="model_hive_schema_name"  value="bbs_ebsp_model_space"/> 
+		<param name="fnd_id_flex_code"        value="GL#"/>
+		<param name="segment_attr_type"       value="GL_ACCOUNT"/>
+                <param name="language"                value="US"/>
+        </global>
+
+	<fork name="01_source_tables_load_fork">
+		<path start="01_01_lm_headers_load"/>
+		<path start="01_02_lm_batches_load"/>
+		<path start="01_03_lm_ledgers_load"/>
+		<path start="01_04_lm_periods_load"/>	
+		<path start="01_05_lm_fnd_flexs_load"/>	
+		<path start="01_06_lm_fnd_flexstructure_load"/>
+                <path start="01_07_lm_lines_load"/>
+                <path start="01_08_lm_code_combination_load"/>
+                <path start="01_09_lm_segment_attributes_load"/>
+                <path start="01_10_lm_flex_segments_load"/>
+                <path start="01_11_lm_fex_values_load"/>
+	</fork>
+
+
+        <step name="01_01_lm_headers_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_01_lm_headers_load.sql" tmp-table="01_01_lm_headers_cache" storage="memory"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+
+
+        <step name="01_02_lm_batches_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_02_lm_batches_load.sql" tmp-table="01_02_lm_batches_cache" storage="memory"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+
+
+	<step name="01_03_lm_ledgers_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_03_lm_ledgers_load.sql" tmp-table="01_03_lm_ledgers_cache" storage="memory"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+
+
+        <step name="01_04_lm_periods_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_04_lm_periods_load.sql" tmp-table="01_04_lm_periods_cache" storage="memory"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+		
+
+        <step name="01_05_lm_fnd_flexs_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_05_lm_fnd_flexs_load.sql" tmp-table="01_05_lm_fnd_flexs_cache" storage="memory"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+		
+
+        <step name="01_06_lm_fnd_flexstructure_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_06_lm_fnd_flexstructure_load.sql" tmp-table="01_06_lm_fnd_flexstructure_cache" storage="memory"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>	
+
+
+        <step name="01_07_lm_lines_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_07_lm_lines_load.sql" tmp-table="01_07_lm_lines_cache" storage="memory" repartition="600"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+
+
+        <step name="01_08_lm_code_combination_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_08_lm_code_combination_load.sh" tmp-table="01_08_lm_code_combination_cache" storage="memory" repartition="200"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+
+
+        <step name="01_09_lm_segment_attributes_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_09_lm_segment_attributes_load.sh" tmp-table="01_09_lm_segment_attributes_cache" storage="memory"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+
+
+        <step name="01_10_lm_flex_segments_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_10_lm_flex_segments_load.sql" tmp-table="01_10_lm_flex_segments_cache" storage="memory"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+
+
+        <step name="01_11_lm_fex_values_load" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/01_11_lm_fex_values_load.sql" tmp-table="01_11_lm_fex_values_cache" storage="memory"/>
+                <next on-success="01_source_tables_load_join" on-error="fail"/>
+        </step>
+
+
+	<join name="01_source_tables_load_join" to="02_interim_tables_prep_fork"/>
+
+
+        <fork name="02_interim_tables_prep_fork">
+                <path start="02_01_01_lm_header_batches_prep"/>
+		<path start="02_01_02_lm_header_batch_ledger_prep"/>
+		<path start="02_01_03_lm_header_batch_ledger_period_prep"/>		
+		<path start="02_02_01_lm_fnd_flex_structures_prep"/>
+		<path start="02_02_02_lm_fnd_flex_code_combinations_prep"/>
+	</fork>
+
+		
+        <step name="02_01_01_lm_header_batches_prep" desc="cache">
+                <sql  path="${gl.flatmodel.sqls.path}/02_01_01_lm_header_batches_prep.sql" tmp-table="02_01_01_lm_header_batches_cache" storage="memory"/>
+                        <param name="gl_header_cache" value="${01_01_lm_headers_load.tmp-table}"/>
+                        <param name="gl_batch_cache" value="${01_02_lm_batches_load.tmp-table}"/>
+                <next on-success="02_interim_tables_prep_join" on-error="fail"/>
+        </step>
+
+
+        <step name="02_01_02_lm_header_batch_ledger_prep" desc="cache" >
+                <sql  path="${gl.flatmodel.sqls.path}/02_01_02_lm_header_batch_ledger_prep.sql" tmp-table="02_01_02_lm_header_batch_ledger_cache" storage="memory"/>
+                        <param name="gl_header_interim_cache" value="${02_lm_header_batches_prep.tmp-table}"/>
+                        <param name="gl_ledger_cache" value="${01_03_lm_ledgers_load.tmp-table}"/>
+                <next on-success="02_interim_tables_prep_join" on-error="fail"/>
+        </step>
+
+
+        <step name="02_01_03_lm_header_batch_ledger_period_prep" desc="cache" >
+                <sql  path="${gl.flatmodel.sqls.path}/02_01_03_lm_header_batch_ledger_period_prep.sql" tmp-table="02_01_03_lm_header_batch_ledger_period_cache" storage="memory"/>
+                        <param name="gl_header_interim_cache" value="${03_lm_header_batch_ledger_prep.tmp-table}"/>
+                        <param name="gl_periods_cache" value="${01_04_lm_periods_load.tmp-table}"/>
+                <next on-success="02_interim_tables_prep_join" on-error="fail"/>
+        </step>
+
+
+        <step name="02_02_01_lm_fnd_flex_structures_prep" desc="cache" >
+                <sql  path="${gl.flatmodel.sqls.path}/02_02_01_lm_fnd_flex_structures_prep.sql" tmp-table="02_02_01_lm_fnd_flex_structures_cache" storage="memory"/>
+                        <param name="fnd_flex_cache" value="${01_05_lm_fnd_flexs_load.tmp-table}"/>
+                        <param name="fnd_flex_structure_cache" value="${01_06_lm_fnd_flexstructure_load.tmp-table}"/>
+                <next on-success="02_interim_tables_prep_join" on-error="fail"/>
+        </step>
+
+
+        <step name="02_02_02_lm_fnd_flex_code_combinations_prep" desc="cache" >
+                <sql  path="${gl.flatmodel.sqls.path}/02_02_02_lm_fnd_flex_code_combinations_prep.sql" tmp-table="02_02_02_lm_fnd_flex_code_combinations_cache" storage="memory"/>
+                        <param name="fnd_flex_structure_interim_cache" value="${05_lm_fnd_flex_structures_prep.tmp-table}"/>
+                        <param name="code_combination_cache" value="${01_08_lm_code_combination_load.tmp-table}"/>
+                <next on-success="02_interim_tables_prep_join" on-error="fail"/>
+        </step>
+
+
+	<join name="02_interim_tables_prep_join" to="03_lm_lines_flex_struct_codes_prep"/>
+
+
+        <step name="03_lm_lines_flex_struct_codes_prep" desc="cache" >
+                <sql  path="${gl.flatmodel.sqls.path}/03_lm_lines_flex_struct_codes_prep.sql" tmp-table="03_lm_lines_flex_struct_codes_cache" storage="memory"/>
+                        <param name="flex_structure_codes_interim_cache" value="${02_02_02_lm_fnd_flex_code_combinations_prep.tmp-table}"/>
+                        <param name="gl_lines_cache" value="${01_07_lm_lines_load.tmp-table}"/>
+                <next on-success="04_lm_lines_flex_codes_attributes_prep" on-error="fail"/>
+        </step>
+
+
+        <step name="04_lm_lines_flex_codes_attributes_prep" desc="cache" >
+                <sql  path="${gl.flatmodel.sqls.path}/04_lm_lines_flex_codes_attributes_prep.sql" tmp-table="04_lm_lines_flex_codes_attributes_cache" storage="memory"/>
+                        <param name="gl_line_interim_cache" value="${03_lm_lines_flex_struct_codes_prep.tmp-table}"/>
+                        <param name="flex_segment_attr_cache" value="${01_09_lm_segment_attributes_load.tmp-table}"/>
+                <next on-success="05_lm_lines_flex_codes_segments" on-error="fail"/>
+        </step>
+
+
+        <step name="05_lm_lines_flex_codes_segments" desc="cache" >
+                <sql  path="${gl.flatmodel.sqls.path}/05_lm_lines_flex_codes_segments.sql" tmp-table="05_lm_lines_flex_codes_segments_cache" storage="memory"/>
+                        <param name="gl_line_interim_cache" value="${04_lm_lines_flex_codes_attributes_prep.tmp-table}"/>
+                        <param name="flex_segment_cache" value="${01_10_lm_flex_segments_load.tmp-table}"/>
+                <next on-success="06_lm_lines_flex_segment_values_prep" on-error="fail"/>
+        </step>
+
+
+        <step name="06_lm_lines_flex_segment_values_prep" desc="cache" >
+                <sql  path="${gl.flatmodel.sqls.path}/06_lm_lines_flex_segment_values_prep.sql" tmp-table="06_lm_lines_flex_segment_values_cache" storage="memory"/>
+                        <param name="gl_line_interim_cache" value="${05_lm_lines_flex_codes_segments.tmp-table}"/>
+                        <param name="flex_values_cache" value="${01_11_lm_fex_values_load.tmp-table}"/>
+                <next on-success="07_lm_store_recent_period_value" on-error="fail"/>
+        </step>
+
+        <step name="07_lm_store_recent_period_value" desc="cache" hdfs-path-sync="/user/s-bbs-bdac/tmp/gl_lines_job/">
+                <sql  path="${gl.flatmodel.sqls.path}/07_lm_store_recent_period_value.sql" tmp-table="07_lm_store_recent_period_value_cache" storage="memory"/>
+                        <param name="gl_lines_interim_cache" value="${06_lm_lines_flex_segment_values_prep.tmp-table}"/>
+                <next on-success="08_lm_apply_recent_period_values" on-error="fail"/>
+        </step>
+
+
+        <step name="08_lm_apply_recent_period_values" desc="cache">
+                <shell script-path="/home/IAMERS/s-bbs-bdac/files/model_pd_work/work/gl_lines_model_prep/sqls/08_lm_apply_recent_period_values.sh"/>
+                <param name="period_lastvalue_path" value="/user/s-bbs-bdac/tmp/gl_lines_job/"/>
+                <param name="flatmodel_sqls_path" value="/home/IAMERS/s-bbs-bdac/files/model_pd_work/work/gl_lines_model_prep/sqls"/>
+                <next on-success="09_lm_prepare_gl_lines_flat_table" on-error="fail"/>
+        </step>
+
+
+        <step name="09_lm_prepare_gl_lines_flat_table" desc="cache" >
+                <sql  path="${gl.flatmodel.sqls.path}/09_lm_prepare_gl_lines_flat_table.sql" tmp-table="09_lm_prepare_gl_lines_flat_table_cache" storage="memory"/>
+                        <param name="gl_lines_interim_cache" value="${06_lm_lines_flex_segment_values_prep.tmp-table}"/>
+                        <param name="flat_table_name" value="gl_je_lines_flat_table_report"/>
+                <next on-success="finish" on-error="fail"/>
+        </step>
+
+
+        <finish-step name="finish"/>
+        <fail-step name="fail"/>
+
+</sparksql-application>
