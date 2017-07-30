@@ -210,7 +210,7 @@
          "type":"hadoop",
          "inputSpec":{  
             "type":"static",
-            "paths":"hdfs://oswego-pnn2001.amers.ibechtel.com/apps/hive/warehouse/bbs_ebsa_model_space.db/v7_07_final_balances_report_model_formatted_limited/"
+            "paths":"hdfs://<namenode>/apps/hive/warehouse/bbs_ebsa_model_space.db/v7_07_final_balances_report_model_formatted_limited/"
          }
       },
       "tuningConfig":{  

@@ -175,7 +175,7 @@
          "type":"hadoop",
          "inputSpec":{  
             "type":"static",
-            "paths":"hdfs://oswego-pnn2001.amers.ibechtel.com/apps/hive/warehouse/bbs_ebsp_model_space.db/gl_je_lines_flat_table_report_10_6mns/"
+            "paths":"hdfs://<namenode>/apps/hive/warehouse/bbs_ebsp_model_space.db/gl_je_lines_flat_table_report_10_6mns/"
          }
       },
       "tuningConfig":{  
