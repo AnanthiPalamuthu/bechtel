@@ -1,0 +1,334 @@
+gl_je_headers
+-------------- 
+	je_header_id head_je_header_id ,
+    ledger_id head_ledger_id ,
+    je_category head_je_category ,
+    je_source head_je_source ,
+    period_name head_period_name ,
+    name head_name ,
+    currency_code head_currency_code ,
+    status head_status ,
+    date_created head_date_created ,
+    accrual_rev_flag head_accrual_rev_flag ,
+    multi_bal_seg_flag head_multi_bal_seg_flag ,
+    actual_flag head_actual_flag ,
+    default_effective_date head_default_effective_date ,
+    tax_status_code head_tax_status_code ,
+    conversion_flag head_conversion_flag ,
+    creation_date head_creation_date ,
+    created_by head_created_by ,
+    encumbrance_type_id head_encumbrance_type_id ,
+    budget_version_id head_budget_version_id ,
+    balanced_je_flag head_balanced_je_flag ,
+    balancing_segment_value head_balancing_segment_value ,
+    je_batch_id head_je_batch_id ,
+    from_recurring_header_id head_from_recurring_header_id ,
+    unique_date head_unique_date ,
+    earliest_postable_date head_earliest_postable_date ,
+    posted_date head_posted_date ,
+    accrual_rev_effective_date head_accrual_rev_effective_date ,
+    accrual_rev_period_name head_accrual_rev_period_name ,
+    accrual_rev_status head_accrual_rev_status ,
+    accrual_rev_je_header_id head_accrual_rev_je_header_id ,
+    accrual_rev_change_sign_flag head_accrual_rev_change_sign_flag ,
+    description head_description ,
+    control_total head_control_total ,
+    running_total_dr head_running_total_dr ,
+    running_total_cr head_running_total_cr ,
+    running_total_accounted_dr head_running_total_accounted_dr ,
+    running_total_accounted_cr head_running_total_accounted_cr ,
+    currency_conversion_rate head_currency_conversion_rate ,
+    currency_conversion_type head_currency_conversion_type ,
+    currency_conversion_date head_currency_conversion_date ,
+    external_reference head_external_reference ,
+    parent_je_header_id head_parent_je_header_id ,
+    reversed_je_header_id head_reversed_je_header_id ,
+    originating_bal_seg_value head_originating_bal_seg_value ,
+    intercompany_mode head_intercompany_mode ,
+    dr_bal_seg_value head_dr_bal_seg_value ,
+    cr_bal_seg_value head_cr_bal_seg_value ,
+    dr_bal_seg_value head_dr_bal_seg_value ,
+    cr_bal_seg_value head_cr_bal_seg_value ,
+    context head_context ,
+    doc_sequence_id head_doc_sequence_id ,
+    doc_sequence_value head_doc_sequence_value ,
+    reference_date head_reference_date
+
+gl_je_batches
+-------------
+    je_batch_id batch_je_batch_id ,
+    set_of_books_id_11i batch_set_of_books_id_11i ,
+    name batch_name ,
+    status batch_status ,
+    status_verified batch_status_verified ,
+    budgetary_control_status batch_budgetary_control_status ,
+    approval_status_code batch_approval_status_code ,
+    default_period_name batch_default_period_name ,
+    unique_date batch_unique_date ,
+    earliest_postable_date batch_earliest_postable_date ,
+    posted_date batch_posted_date ,
+    date_created batch_date_created ,
+    description batch_description ,
+    control_total batch_control_total ,
+    running_total_dr batch_running_total_dr ,
+    running_total_cr batch_running_total_cr ,
+    running_total_accounted_dr batch_running_total_accounted_dr ,
+    running_total_accounted_cr batch_running_total_accounted_cr ,
+    parent_je_batch_id batch_parent_je_batch_id ,
+    request_id batch_request_id ,
+    org_id batch_org_id ,
+    chart_of_accounts_id batch_chart_of_accounts_id ,
+    period_set_name batch_period_set_name ,
+    accounted_period_type batch_accounted_period_type ,
+    group_id batch_group_id ,
+    approver_employee_id batch_approver_employee_id ,
+    global_attribute_category batch_global_attribute_category
+	
+gl_ledgers
+-----------
+    ledger_id ledger_ledger_id ,
+    name ledger_name ,
+    short_name ledger_short_name ,
+    description ledger_description ,
+    ledger_category_code ledger_ledger_category_code ,
+    alc_ledger_type_code ledger_alc_ledger_type_code ,
+    object_type_code ledger_object_type_code ,
+    le_ledger_type_code ledger_le_ledger_type_code ,
+    completion_status_code ledger_completion_status_code ,
+    configuration_id ledger_configuration_id ,
+    chart_of_accounts_id ledger_chart_of_accounts_id ,
+    currency_code ledger_currency_code ,
+    period_set_name ledger_period_set_name ,
+    accounted_period_type ledger_accounted_period_type ,
+    first_ledger_period_name ledger_first_ledger_period_name ,
+    transaction_calendar_id ledger_transaction_calendar_id ,
+    daily_translation_rate_type ledger_daily_translation_rate_type ,
+    ledger_attributes ledger_ledger_attributes ,
+    implicit_ledger_set_id ledger_implicit_ledger_set_id ,
+    latest_opened_period_name ledger_latest_opened_period_name ,
+    latest_encumbrance_year ledger_latest_encumbrance_year ,
+    period_average_rate_type ledger_period_average_rate_type ,
+    period_end_rate_type ledger_period_end_rate_type ,
+    budget_period_avg_rate_type ledger_budget_period_avg_rate_type ,
+    budget_period_end_rate_type ledger_budget_period_end_rate_type ,
+    creation_date ledger_creation_date ,
+    created_by ledger_created_by
+
+gl_periods
+-----------
+    period_set_name period_period_set_name ,
+    period_name period_period_name ,
+    start_date period_start_date ,
+    end_date period_end_date ,
+    year_start_date period_year_start_date ,
+    quarter_start_date period_quarter_start_date ,
+    period_type period_period_type ,
+    period_year period_period_year ,
+    period_num period_period_num ,
+    quarter_num period_quarter_num ,
+    entered_period_name period_entered_period_name ,
+    creation_date period_creation_date ,
+    description period_description
+	
+fnd_id_flexs
+------------
+    application_id flex_application_id ,
+    id_flex_code flex_id_flex_code ,
+    id_flex_name flex_id_flex_name ,
+    table_application_id flex_table_application_id ,
+    application_table_name flex_application_table_name ,
+    allow_id_valuesets flex_allow_id_valuesets ,
+    unique_id_column_name flex_unique_id_column_name ,
+    description flex_description ,
+    application_table_type flex_application_table_type
+	
+fnd_id_flex_structures_tl
+-------------------------	
+    application_id flex_structure_application_id ,
+    id_flex_code flex_structure_id_flex_code ,
+    id_flex_num flex_structure_id_flex_num ,
+    language flex_structure_language ,
+    id_flex_structure_name flex_structure_id_flex_structure_name ,
+    description flex_structure_description
+
+gl_je_lines
+-----------
+    je_header_id line_je_header_id ,
+    je_line_num line_je_line_num ,
+    ledger_id line_ledger_id ,
+    code_combination_id line_code_combination_id ,
+    period_name period_name ,
+    effective_date line_effective_date ,
+    status line_status ,
+    creation_date line_creation_date ,
+    entered_dr line_entered_dr ,
+    entered_cr line_entered_cr ,
+    accounted_dr line_accounted_dr ,
+    accounted_cr line_accounted_cr ,
+    description line_description ,
+    reference_1 line_reference_1 ,
+    reference_2 line_reference_2 ,
+    reference_3 line_reference_3 ,
+    reference_4 line_reference_4 ,
+    reference_5 line_reference_5 ,
+    attribute1 line_attribute1 ,
+    attribute2 line_attribute2 ,
+    attribute3 line_attribute3 ,
+    attribute4 line_attribute4 ,
+    attribute5 line_attribute5 ,
+    attribute6 line_attribute6 ,
+    attribute7 line_attribute7 ,
+    attribute8 line_attribute8 ,
+    attribute9 line_attribute9 ,
+    attribute10 line_attribute10 ,
+    invoice_date line_invoice_date ,
+    gl_sl_link_id line_gl_sl_link_id ,
+    gl_sl_link_table line_gl_sl_link_table
+
+gl_code_combinations
+---------------------
+    code_combination_id code_code_combination_id ,
+    chart_of_accounts_id code_chart_of_accounts_id ,
+    account_type code_account_type ,
+    segment1 code_segment1 ,
+    segment2 code_segment2 ,
+    segment3 code_segment3 ,
+    segment4 code_segment4 ,
+    segment5 code_segment5 ,
+    segment6 code_segment6 ,
+    segment7 code_segment7 ,
+    segment8 code_segment8 ,
+    segment9 code_segment9 ,
+    segment10 code_segment10 ,
+    description code_description ,
+    start_date_active code_start_date_active ,
+    end_date_active code_end_date_active ,
+    ledger_segment code_ledger_segment ,
+    ledger_type_code code_ledger_type_code ,
+    alternate_code_combination_id code_alternate_code_combination_id
+
+fnd_segment_attribute_values
+-----------------------------	
+   id_flex_code segattr_id_flex_code,
+   id_flex_num segattr_id_flex_num,
+   application_column_name segattr_application_column_name,
+   attribute_value ,
+
+fnd_id_flex_segments
+---------------------
+   application_id seg_application_id,
+   id_flex_code seg_id_flex_code,
+   id_flex_num seg_id_flex_num,
+   application_column_name seg_application_column_name,
+   segment_name,
+   segment_num,
+   flex_value_set_id,
+   default_type,
+   default_value
+   segment_attribute_type
+
+fnd_flex_values_vl
+-------------------
+   flex_value_id,
+   flex_value,
+   compiled_value_attributes,
+   flex_value_set_id,
+   value_category,
+   start_date_active,
+   end_date_active,
+   hierarchy_level,
+   flex_value_meaning,
+   description
+ 
+   
+Final Processed Data
+--------------------
+
+Oracle Names							Semantic Names
+-----------------------------------------------------------------------------
+line_je_header_id                     	JOURNAL HEADER ID
+line_je_line_num                      	JOURNAL LINE NUMBER
+line_ledger_id                        	LEDGER IDENTIFIER
+line_code_combination_id              	LINE FLEXFIELD COMBINATION ID
+period_name                           	PERIOD NAME
+line_effective_date                   	LINE EFFECTIVE DATE
+line_status                           	LINE STATUS CODE
+line_creation_date                    	LINE CREATION DATE
+line_entered_dr                       	LINE DEBIT AMOUNT
+line_entered_cr                       	LINE CREDIT AMOUNT
+line_accounted_dr                     	LINE DEBIT AMOUNT IN BASE CURRENCY
+line_accounted_cr                     	LINE CREDIT AMOUNT IN BASE CURRENCY
+line_description                      	LINE DESCRIPTION
+line_reference_1                      	LINE REFERENCE 1
+line_reference_2                      	LINE REFERENCE 2
+line_reference_3                      	LINE REFERENCE 3
+line_reference_4                      	LINE REFERENCE 4
+line_reference_5                      	LINE REFERENCE 5
+line_attribute1                       	LINE ATTRIBUTE 1
+line_attribute2                       	LINE ATTRIBUTE 2
+line_attribute3                       	LINE ATTRIBUTE 3
+line_attribute4                       	LINE ATTRIBUTE 4
+line_attribute5                       	LINE ATTRIBUTE 5
+line_attribute6                       	LINE ATTRIBUTE 6
+line_attribute7                       	LINE ATTRIBUTE 7
+line_attribute8                       	LINE ATTRIBUTE 8
+line_attribute9                       	LINE ATTRIBUTE 9
+line_attribute10                      	LINE ATTRIBUTE 10
+line_invoice_date                     	INVOICE DATE
+line_gl_sl_link_id                    	LINE_GL_SL_LINK_ID
+line_gl_sl_link_table                 	LINE_GL_SL_LINK_TABLE
+code_code_combination_id              	FLEXFIELD COMBINATION ID
+code_chart_of_accounts_id             	CHART OF ACCOUNTS ID
+code_account_type                     	ACCOUNT TYPE
+code_segment1                         	ENTITY-OFFICE
+code_segment2                         	CORE ACCOUNT
+code_segment3                         	SUB ACCOUNT
+code_segment4                         	NATURAL CLASS
+code_segment5                         	JOB NUMBER
+code_segment6                         	SUB JOB NUMBER
+code_segment7                         	COST CENTER
+code_segment8                         	ORIG. NAT CLASS
+code_segment9                         	BILL-TO ENTITY-OFFICE
+code_segment10                        	INTERCOMPANY
+code_description                      	CODE DESCRIPTION
+code_start_date_active                	CODE START DATE
+code_end_date_active                  	CODE END DATE
+code_ledger_segment                   	LEDGER SEGMENT
+code_ledger_type_code                 	LEDGER TYPE CODE
+code_alternate_code_combination_id    	FLEXFIELD ALTERNATE COMBINATION ID
+flex_application_id                   	FLEX APPLICATION ID
+flex_id_flex_code                     	ID FLEX CODE
+flex_id_flex_name                     	ID FLEX NAME
+flex_table_application_id             	FLEX APPLICATION ID 2
+flex_application_table_name           	FLEX APPLICATION TABLE NAME
+flex_allow_id_valuesets               	FLEX ALLOWED VALUESETS
+flex_unique_id_column_name            	FLEX UNIQUE ID COLUMN
+flex_description                      	FLEX DESCRIPTION
+flex_application_table_type           	FLEX APPLICATION TABLE TYPE
+flex_structure_id_flex_num            	ID FLEX NUMBER
+flex_structure_language               	FLEX STRUCTURE LANGUAGE
+flex_structure_id_flex_structure_name 	FLEX STRUCTURE NAME
+flex_structure_description            	FLEX STRUCTURE DESCRIPTION
+application_column_name               	COLUMN NAME
+attribute_value                       	ATTRIBUTE VALUE
+segment_attribute_type                	ATTRIBUTE TYPE
+seg_application_id                    	SEG_APPLICATION ID
+seg_id_flex_code                      	SEG ID FLEX CODE
+seg_id_flex_num                       	SEG ID FLEX NUM
+seg_application_column_name           	SEG APPLICATION COLUMN NAME
+segment_name                          	SEGMENT NAME
+segment_num                           	SEGMENT NUM
+flex_value_set_id                     	FLEX VALUE SET ID
+default_type                          	DEFAULT TYPE
+default_value                         	DEFAULT VALUE
+flex_value_id                         	FLEX VALUE ID
+flex_value                            	FLEX VALUE
+compiled_value_attributes             	TRIAL BALANCE TYPE ACTUAL
+ledger_type_char                      	TRIAL BALANCE TYPE CHAR
+ledger_type                           	TRIAL BALANCE TYPE
+value_category                        	VALUE CATEGORY
+start_date_active                     	START DATE ACTIVE
+end_date_active                       	END DATE ACTIVE
+hierarchy_level                       	HIERARCHY LEVEL
+flex_value_meaning                    	FLEX VALUE MEANING
+description                           	CORE DESCRIPTION

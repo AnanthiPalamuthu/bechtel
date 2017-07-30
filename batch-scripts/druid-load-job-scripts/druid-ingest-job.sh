@@ -130,8 +130,7 @@ function checkDruidIngestionJobStatus()
         sleep 2s
  
     done
-
-
+	
     writeToLog "Druid datasource ingestion job ${ingestJobID} was completed with status ${ingestJobStatus}"
 
 }
@@ -187,16 +186,12 @@ function checkDruidIngestionJobStatus()
     executeDruidIngestionJson
     checkExit $? 
 
-#ingestJobID="index_hadoop_gl_balances_flat_test_2017-07-26T20:34:55.440Z"
-
     #holding until the ingestion job comes to SUCCES/FAILED status
     checkDruidIngestionJobStatus
     checkExit $?
-exit 1
 
-    writeToLog "INFO: Successfully executed the spark workflow batch job.."
+    writeToLog "INFO: Successfully executed the druid datasource ingestion batch job.."
 
     writeToLog "INFO: Time taken to complete the batch job execution is $((`date +%s`-startTimeLog))"
-    exit 1
-
-
+	
+    exit 0s
