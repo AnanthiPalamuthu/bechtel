@@ -1,0 +1,22 @@
+Note : Please refer screen-background-tasks.txt 
+
+startup commands 
+------------------
+java `cat conf/druid/historical/jvm.config | xargs` -cp "conf/druid/_common:conf/druid/historical:lib/*:hadoop-dependencies/hadoop-client/2.7.1/*" io.druid.cli.Main server historical > log/historical.log &
+
+java `cat conf/druid/broker/jvm.config | xargs` -cp "conf/druid/_common:conf/druid/broker:lib/*:hadoop-dependencies/hadoop-client/2.7.1/*" io.druid.cli.Main server broker > log/broker.log &
+
+java `cat conf/druid/coordinator/jvm.config | xargs` -cp "conf/druid/_common:conf/druid/coordinator:lib/*:hadoop-dependencies/hadoop-client/2.7.1/*" io.druid.cli.Main server coordinator > log/coordinator.log &
+
+java `cat conf/druid/overlord/jvm.config | xargs` -cp "conf/druid/_common:conf/druid/overlord:lib/*:hadoop-dependencies/hadoop-client/2.7.1/*" io.druid.cli.Main server overlord > log/overlord.log &
+
+java `cat conf/druid/middleManager/jvm.config | xargs` -cp "conf/druid/_common:conf/druid/middleManager:lib/*:hadoop-dependencies/hadoop-client/2.7.1/*" io.druid.cli.Main server middleManager > log/middleManager.log &
+
+
+shut down commands
+-------------------
+
+kill -9 <process id of all druid daemons>
+
+<kill all historical, broker, coordinator, overlord, middlemanager tasks>
+

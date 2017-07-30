@@ -1,0 +1,192 @@
+{  
+   "type":"index_hadoop",
+   "spec":{  
+      "dataSchema":{  
+         "dataSource":"index_gl_lines_3years",
+         "parser":{  
+            "type":"hadoopyString",
+            "parseSpec":{  
+               "format":"tsv",
+               "delimiter":"|",
+               "timestampSpec":{  
+                  "column":"PERIOD NAME",
+                  "format":"MMM-yy"
+               },
+               "columns":[
+                        "JOURNAL HEADER ID",
+                        "JOURNAL LINE NUMBER",
+                        "LEDGER IDENTIFIER",
+                        "LINE FLEXFIELD COMBINATION ID",
+                        "PERIOD NAME",
+                        "LINE EFFECTIVE DATE",
+                        "LINE STATUS CODE",
+                        "LINE CREATION DATE",
+                        "LINE DEBIT AMOUNT",
+                        "LINE CREDIT AMOUNT",
+                        "LINE DEBIT AMOUNT IN BASE CURRENCY",
+                        "LINE CREDIT AMOUNT IN BASE CURRENCY",
+                        "LINE DESCRIPTION",
+                        "LINE REFERENCE 1",
+                        "LINE REFERENCE 2",
+                        "LINE REFERENCE 3",
+                        "LINE REFERENCE 4",
+                        "LINE REFERENCE 5",
+                        "LINE ATTRIBUTE 1",
+                        "LINE ATTRIBUTE 2",
+                        "LINE ATTRIBUTE 3",
+                        "LINE ATTRIBUTE 4",
+                        "LINE ATTRIBUTE 5",
+                        "LINE ATTRIBUTE 6",
+                        "LINE ATTRIBUTE 7",
+                        "LINE ATTRIBUTE 8",
+                        "LINE ATTRIBUTE 9",
+                        "LINE ATTRIBUTE 10",
+                        "INVOICE DATE",
+                        "LINE_GL_SL_LINK_ID",
+                        "LINE_GL_SL_LINK_TABLE",
+                        "FLEXFIELD COMBINATION ID",
+                        "CHART OF ACCOUNTS ID",
+                        "ACCOUNT TYPE",
+                        "ENTITY-OFFICE",
+                        "CORE ACCOUNT",
+                        "SUB ACCOUNT",
+                        "NATURAL CLASS",
+                        "JOB NUMBER",
+                        "SUB JOB NUMBER",
+                        "COST CENTER",
+                        "ORIG. NAT CLASS",
+                        "BILL-TO ENTITY-OFFICE",
+                        "INTERCOMPANY",
+                        "CODE DESCRIPTION",
+                        "CODE START DATE",
+                        "CODE END DATE",
+                        "LEDGER SEGMENT",
+                        "LEDGER TYPE CODE",
+                        "FLEXFIELD ALTERNATE COMBINATION ID",
+                        "FLEX APPLICATION ID",
+                        "ID FLEX CODE",
+                        "ID FLEX NAME",
+                        "FLEX APPLICATION ID 2",
+                        "FLEX APPLICATION TABLE NAME",
+                        "FLEX ALLOWED VALUESETS",
+                        "FLEX UNIQUE ID COLUMN",
+                        "FLEX DESCRIPTION",
+                        "FLEX APPLICATION TABLE TYPE",
+                        "ID FLEX NUMBER",
+                        "FLEX STRUCTURE LANGUAGE",
+                        "FLEX STRUCTURE NAME",
+                        "FLEX STRUCTURE DESCRIPTION",
+                        "COLUMN NAME",
+                        "ATTRIBUTE VALUE",
+                        "ATTRIBUTE TYPE",
+                        "SEG_APPLICATION ID",
+                        "SEG ID FLEX CODE",
+                        "SEG ID FLEX NUM",
+                        "SEG APPLICATION COLUMN NAME",
+                        "SEGMENT NAME",
+                        "SEGMENT NUM",
+                        "FLEX VALUE SET ID",
+                        "DEFAULT TYPE",
+                        "DEFAULT VALUE",
+                        "FLEX VALUE ID",
+                        "FLEX VALUE",
+                        "TRIAL BALANCE TYPE ACTUAL",
+                        "TRIAL BALANCE TYPE CHAR",
+                        "TRIAL BALANCE TYPE",
+                        "VALUE CATEGORY",
+                        "START DATE ACTIVE",
+                        "END DATE ACTIVE",
+                        "HIERARCHY LEVEL",
+                        "FLEX VALUE MEANING",
+                        "CORE DESCRIPTION"
+                  ],
+
+             "dimensionsSpec":{
+                  "dimensions":[
+                        "JOURNAL HEADER ID",
+                        "LEDGER IDENTIFIER",
+                        "LINE STATUS CODE",
+                        "FLEXFIELD COMBINATION ID",
+                        "PERIOD NAME",
+                        "LINE DESCRIPTION",
+                        "CHART OF ACCOUNTS ID",
+                        "ACCOUNT TYPE",
+                        "ENTITY-OFFICE",
+                        "CORE ACCOUNT",
+                        "SUB ACCOUNT",
+                        "NATURAL CLASS",
+                        "JOB NUMBER",
+                        "SUB JOB NUMBER",
+                        "COST CENTER",
+                        "ORIG. NAT CLASS",
+                        "BILL-TO ENTITY-OFFICE",
+                        "INTERCOMPANY",
+                        "CODE DESCRIPTION",
+                        "LEDGER SEGMENT",
+                        "LEDGER TYPE CODE",
+                        "FLEX APPLICATION ID",
+                        "ID FLEX CODE",
+                        "ID FLEX NAME",
+                        "FLEX DESCRIPTION",
+                        "ID FLEX NUMBER",
+                        "FLEX STRUCTURE NAME",
+                        "FLEX STRUCTURE DESCRIPTION",
+                        "COLUMN NAME",
+                        "ATTRIBUTE VALUE",
+                        "ATTRIBUTE TYPE",
+                        "SEG ID FLEX CODE",
+                        "SEG ID FLEX NUM",
+                        "SEG APPLICATION COLUMN NAME",
+                        "SEGMENT NAME",
+                        "SEGMENT NUM",
+                        "FLEX VALUE SET ID",
+                        "FLEX VALUE",
+                        "TRIAL BALANCE TYPE ACTUAL",
+                        "TRIAL BALANCE TYPE CHAR",
+                        "TRIAL BALANCE TYPE",
+                        "VALUE CATEGORY",
+                        "FLEX VALUE MEANING",
+                        "CORE DESCRIPTION"  
+                  ],
+                   "dimensionExclusions":[  
+                  ],
+                  "spatialDimensions":[  
+
+                  ]
+               }
+            }
+         },
+         "metricsSpec":[   
+                  { "name" : "SUM OF LINE DEBIT AMOUNT","type" : "doubleSum","fieldName" :"LINE DEBIT AMOUNT" },
+                  { "name" : "SUM OF LINE CREDIT AMOUNT","type" : "doubleSum","fieldName" : "LINE CREDIT AMOUNT" },
+                  { "name" : "SUM OF LINE DEBIT AMOUNT IN BASE CURRENCY", "type" :"doubleSum", "fieldName":"LINE DEBIT AMOUNT IN BASE CURRENCY" },
+                  { "name" : "SUM OF LINE CREDIT AMOUNT IN BASE CURRENCY", "type" :"doubleSum","fieldName":"LINE CREDIT AMOUNT IN BASE CURRENCY" }
+         ],
+         "granularitySpec":{  
+            "type":"uniform",
+            "segmentGranularity":"MONTH",
+            "queryGranularity":"NONE",
+            "intervals":[  
+               "2014-01-01/2017-06-30"
+            ]
+         }
+      },
+      "ioConfig":{  
+         "type":"hadoop",
+         "inputSpec":{  
+            "type":"static",
+            "paths":"hdfs://<namenode>/apps/hive/warehouse/bbs_ebsp_model_space.db/gl_je_lines_flat_table_report_10_6mns/"
+         }
+      },
+      "tuningConfig":{  
+         "type":"hadoop",
+         "jobProperties": {
+                            "mapreduce.job.classloader": "true"
+                          }
+      }
+   },
+   "hadoopDependencyCoordinates":[  
+      "org.apache.hadoop:hadoop-client:2.7.1"
+   ]
+}
+

@@ -1,0 +1,35 @@
+
+commands to start the druid ingestion job as per the json
+-----------------------------------------------------------
+
+curl -X 'POST' -H 'Content-Type:application/json' -d @<ingestion-spec json path> localhost:8090/druid/indexer/v1/task
+
+
+commands to check about the status of the running indexing job
+----------------------------------------------------------------
+
+curl -v -X 'GET' http://localhost:8099/druid/indexer/v1/task/${ingestJobID}/status
+
+
+commands to list down data sources and to see their segments
+---------------------------------------------------------------
+
+curl -v -X 'GET' localhost:8081/druid/coordinator/v1/metadata/datasources/
+
+curl -v -X 'GET' localhost:8081/druid/coordinator/v1/metadata/datasources/{datasource-name}/
+
+curl -v -X 'GET' localhost:8081/druid/coordinator/v1/metadata/datasources/{datasource-name}/segments
+
+
+commands to check about the cluster and indexer status about the datasources
+-----------------------------------------------------------------------------
+  
+curl -GET localhost:8081/status
+
+curl -GET localhost:8081/druid/coordinator/v1/leader
+
+curl -GET localhost:8081/druid/coordinator/v1/loadstatus
+
+curl -GET localhost:8081/druid/coordinator/v1/loadstatus?simple
+
+curl -GET localhost:8081/druid/coordinator/v1/loadstatus?full

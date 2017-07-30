@@ -1,0 +1,28 @@
+Important Note
+---------------
+The Druid daemons are required to be running in the background, so to maintain active background tasks use below command
+
+    screen
+
+to start screen session
+------------------------
+
+    screen -t "custom-session-name"
+
+
+to detach the running screen 
+----------------------------- 
+
+    press control+d during screen session (to put the session in background)
+
+
+to list the active screen sessions
+-----------------------------------
+
+    screen -list
+
+
+to reattach the backgound screen session
+----------------------------------------
+
+    screen -r "custom-session-name"
