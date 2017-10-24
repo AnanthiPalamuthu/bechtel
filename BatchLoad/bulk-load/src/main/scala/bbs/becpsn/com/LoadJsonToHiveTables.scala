@@ -1,19 +1,13 @@
-package com.hashmap.bechtel.app.sap.batch
+package bbs.becpsn.com
 
 import java.text.SimpleDateFormat
 import java.util.Properties
 
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.hive.HiveContext
-import org.apache.spark.sql.{Row, SQLContext}
-import org.apache.spark.sql.types.{StringType, StructField}
-import org.apache.spark.streaming.{Seconds, StreamingContext}
-import org.apache.spark.sql.Row
-import org.apache.spark.sql.types.{StringType, StructField}
+import org.apache.spark.{SparkConf, SparkContext}
 import play.api.libs.json.{Json, Writes}
-
-import scala.collection.mutable.ListBuffer
 
 object LoadJsonToHiveTables extends App
 {
@@ -81,8 +75,6 @@ object LoadJsonToHiveTables extends App
         case _ => dateFormat.parse(genTime).getTime
       }
       val df = sqlContext.read.json(file)
-
-      import org.apache.spark.sql.functions._
       //      import sqlContext.implicits._
       //      val currentTime = (() => System.currentTimeMillis().toString)
       import org.apache.spark.sql.functions
