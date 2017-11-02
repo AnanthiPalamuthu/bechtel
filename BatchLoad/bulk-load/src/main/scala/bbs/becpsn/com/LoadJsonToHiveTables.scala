@@ -58,7 +58,7 @@ object LoadJsonToHiveTables extends App
   val dateFormat:SimpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss")
 
   def processFile(opts: Map[String, String], file: String) = {
-    var dbName:String = opts.getOrElse[String]("hive-schema","bbs_sap_pr")
+    val dbName:String = opts.getOrElse[String]("hive-schema","bbs_sap_pr")
 
     val dbNameOps :String= opts.getOrElse[String]("hive-operations-schema", "bbs_sap_ops")
     val hive_schema:String = opts.getOrElse[String]("hive-schema", "bbs_sap_pr")
@@ -66,7 +66,7 @@ object LoadJsonToHiveTables extends App
     val deadMessagesTopic:String = opts.getOrElse[String]("dead-messages-topic", "dead-messages")
     val insertTime = System.currentTimeMillis()
     val filename = FilenameUtils.getBaseName(file)
-    val fnregexpattern = """(\w+)-([A-Za-z]+)([0-9]+)""".r
+    val fnregexpattern = """(\w+)-[0-9]*-*([A-Za-z]+)([0-9]+)""".r
     val fnregexpattern(table,opr_ind,genTime) = filename
 
     try {
@@ -75,23 +75,31 @@ object LoadJsonToHiveTables extends App
         case _ => dateFormat.parse(genTime).getTime
       }
       val df = sqlContext.read.json(file)
-      //      import sqlContext.implicits._
-      //      val currentTime = (() => System.currentTimeMillis().toString)
-      import org.apache.spark.sql.functions
 
+      import org.apache.spark.sql.functions
+      var countOfRecords = 0L
       val tableWithSchema=dbName + "." + table
       if(!df.take(1).isEmpty) {
-
+        import org.apache.spark.sql.functions._
+        import sqlContext.implicits._
         if (df.columns.contains("_corrupt_record")) {
 
           val df1 = df.filter("`_corrupt_record` is null").drop(df.col("_corrupt_record"))
-          if(!df1.take(1).isEmpty) {
-            val df2 = df1.withColumn("inserttime", functions.lit(genTime))
-            df2.printSchema()
-            df2.write.mode("append").format("orc").saveAsTable(tableWithSchema)
-            val timeToInsert = filename.split("-").take(1).mkString.replace(".json","").replace("UPD","").replace("INS","").replace("DEL","")
 
-            val tableIngestSummary = TableIngestSummary(dbName, table, file,opr_ind, "batch", df2.count(), "", genTime, insertTime)
+          if(!df1.take(1).isEmpty) {
+            if(df1.columns.contains("TIMESTAMP")) {
+              val df2 = df1.withColumn("inserttime", unix_timestamp($"TIMESTAMP", "yyyyMMddHHmmss") * 1000L).drop(df1.col("TIMESTAMP"))
+              df2.printSchema()
+              df2.write.mode("append").format("orc").saveAsTable(tableWithSchema)
+              countOfRecords = df2.count()
+            } else {
+              val df2 = df1.withColumn("inserttime", functions.lit(generationTime))
+              df2.printSchema()
+              df2.write.mode("append").format("orc").saveAsTable(tableWithSchema)
+              countOfRecords = df2.count()
+            }
+
+            val tableIngestSummary = TableIngestSummary(dbName, table, file,opr_ind, "batch", countOfRecords, "", genTime, insertTime)
             val msg = play.api.libs.json.Json.toJson(tableIngestSummary).toString()
             val dataRecord = new ProducerRecord[String, String](ingestionSummaryTopic, null, msg)
             tableInsertSummaryProducer.send(dataRecord)
@@ -100,12 +108,23 @@ object LoadJsonToHiveTables extends App
           df3.write.mode("append").format("orc").saveAsTable(dbNameOps + ".corrupt_records")
 
         } else {
-          val df1 = df.withColumn("inserttime", functions.lit(genTime))
-          df1.printSchema()
-          df1.write.mode("append").format("orc").saveAsTable(tableWithSchema)
-          val tableIngestSummary = TableIngestSummary(dbName, table, filename, opr_ind, "batch", df1.count(), "", genTime, insertTime)
 
+          if(df.columns.contains("TIMESTAMP")) {
+            val df2 = df.withColumn("inserttime", unix_timestamp($"TIMESTAMP", "yyyyMMddHHmmss") *1000L).drop(df.col("TIMESTAMP"))
+            df2.printSchema()
+            df2.write.mode("append").format("orc").saveAsTable(tableWithSchema)
+            countOfRecords = df2.count()
+          } else {
+            val df2 = df.withColumn("inserttime", functions.lit(generationTime))
+            df2.printSchema()
+            df2.write.mode("append").format("orc").saveAsTable(tableWithSchema)
+            countOfRecords = df2.count()
+          }
+
+          val tableIngestSummary = TableIngestSummary(dbName, table, filename, opr_ind, "batch", countOfRecords, "", genTime, insertTime)
           val msg = play.api.libs.json.Json.toJson(tableIngestSummary).toString()
+
+          // val df1 = df.withColumn("inserttime", functions.lit(genTime))
           val dataRecord = new ProducerRecord[String, String](ingestionSummaryTopic, null, msg)
           tableInsertSummaryProducer.send(dataRecord)
         }
@@ -170,4 +189,3 @@ object LoadJsonToHiveTables extends App
 
 
 }
-
